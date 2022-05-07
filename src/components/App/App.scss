@@ -60,6 +60,9 @@
     width: 100vw;
     height: 100vh;
     background: linear-gradient(60deg, #50a4b9, #71b7c9 60%, #50a4b9 70%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
     &::before{
       content: '';
       width: 100vw;

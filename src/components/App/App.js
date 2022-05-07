@@ -13,13 +13,20 @@ function App() {
   const [diving, setDiving] = useState(false);
 
   useEffect(() => {
+    diveAnimation.current = gsap.timeline({ defaults: { duration: 1.5, ease: "power1.out" } });
     if (diving) {
-      diveAnimation.current = gsap.timeline({ defaults: { duration: 1.5, ease: "power1.out" } });
       diveAnimation.current.to(sea.current, {
         bottom: 0,
       });
       diveAnimation.current.to(waves.current, {
         bottom: "100vh",
+      }, "<")
+    } else {
+      diveAnimation.current.to(sea.current, {
+        bottom: "-90vh",
+      });
+      diveAnimation.current.to(waves.current, {
+        bottom: "10vh",
       }, "<")
     }
   });
@@ -27,12 +34,15 @@ function App() {
   const diveIn = () => {
     setDiving(true);
   };
+  const diveOut = () => {
+    setDiving(false);
+  }
 
   return (
     <div className="app">
-
       <button className='diveButton' onClick={diveIn}>Dive in !</button>
       <div className="sea" ref={sea}>
+        <button className='diveButton' onClick={diveOut}>Dive out !</button>
         <div class="bubble bubble--1"></div>
         <div class="bubble bubble--2"></div>
         <div class="bubble bubble--3"></div>
