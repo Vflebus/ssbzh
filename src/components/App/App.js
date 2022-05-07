@@ -14,7 +14,7 @@ function App() {
 
   useEffect(() => {
     if (diving) {
-      diveAnimation.current = gsap.timeline({ defaults: { duration: 1.5, ease: "none" } });
+      diveAnimation.current = gsap.timeline({ defaults: { duration: 1.5, ease: "power1.out" } });
       diveAnimation.current.to(sea.current, {
         bottom: 0,
       });
@@ -30,6 +30,7 @@ function App() {
 
   return (
     <div className="app">
+
       <button className='diveButton' onClick={diveIn}>Dive in !</button>
       <div className="sea" ref={sea}>
         <div class="bubble bubble--1"></div>
