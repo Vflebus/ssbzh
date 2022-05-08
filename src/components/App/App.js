@@ -1,3 +1,5 @@
+/* eslint-disable eqeqeq */
+/* eslint-disable no-unused-vars */
 import './App.scss';
 import { gsap } from 'gsap';
 import { useEffect, useRef, useState } from 'react';
