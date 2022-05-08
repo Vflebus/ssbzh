@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import './reset.css'
 import './index.css';
-import App from './components/App/App';
+import App from './components/App';
 import reportWebVitals from './reportWebVitals';
 // import Waves from './components/Waves/Waves';
 // import store from './store';
