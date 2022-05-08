@@ -1,6 +1,7 @@
 import './App.scss';
 import { gsap } from 'gsap';
 import { useEffect, useRef, useState } from 'react';
+import axios from 'axios';
 
 function App() {
 
@@ -38,23 +39,62 @@ function App() {
     setDiving(false);
   }
 
+  const [tournament, setTournament] = useState();
+
+  const api = axios.create({
+    baseURL: 'https://api.challonge.com/v1/'
+  });
+  const fetch_challonge = async (tournoi) => {
+    const participantsData = await api.get(`/tournaments/${tournoi}/participants.json?api_key=HgoEi7lekbPyhvOqFeSki4yurW7dpN5LF4Wqk0hb`);
+    const allParticipants = participantsData.data;
+    const matchsData = await api.get(`/tournaments/${tournoi}/matches.json?api_key=HgoEi7lekbPyhvOqFeSki4yurW7dpN5LF4Wqk0hb`);
+    const allMatchs = matchsData.data;
+
+    const participants = allParticipants.map(participant => {
+      const matchsData = allMatchs.filter(match => {
+        return (match.match.player1_id == participant.participant.id || match.match.player2_id == participant.participant.id);
+      })
+      const matchs = matchsData.map(match => {
+        const newMatch = {
+          round: match.match.round > 0 ? `Winner round ${Math.abs(match.match.round)}` : `Loser round ${Math.abs(match.match.round)}`,
+          player1: allParticipants.filter(participant => participant.participant.id == match.match.player1_id)[0].participant.display_name,
+          player2: allParticipants.filter(participant => participant.participant.id == match.match.player2_id)[0].participant.display_name,
+          winner: allParticipants.filter(participant => participant.participant.id == match.match.winner_id)[0].participant.display_name,
+          score: match.match.scores_csv
+        };
+        return newMatch
+      })
+      return {
+        nom: participant.participant.display_name,
+        seed: participant.participant.seed,
+        classement_final: participant.participant.final_rank ? participant.participant.final_rank : "Tournoi non complété",
+        matchs: matchs
+      };
+    });
+    setTournament(participants);
+  }
+
+  useEffect(() => {
+    fetch_challonge('CPUS4W9');
+  })
+
   return (
     <div className="app">
       <button className='diveButton' onClick={diveIn}>Dive in !</button>
       <div className="sea" ref={sea}>
         <button className='diveButton' onClick={diveOut}>Dive out !</button>
-        <div class="bubble bubble--1"></div>
-        <div class="bubble bubble--2"></div>
-        <div class="bubble bubble--3"></div>
-        <div class="bubble bubble--4"></div>
-        <div class="bubble bubble--5"></div>
-        <div class="bubble bubble--6"></div>
-        <div class="bubble bubble--7"></div>
-        <div class="bubble bubble--8"></div>
-        <div class="bubble bubble--9"></div>
-        <div class="bubble bubble--10"></div>
-        <div class="bubble bubble--11"></div>
-        <div class="bubble bubble--12"></div>
+        <div className="bubble bubble--1"></div>
+        <div className="bubble bubble--2"></div>
+        <div className="bubble bubble--3"></div>
+        <div className="bubble bubble--4"></div>
+        <div className="bubble bubble--5"></div>
+        <div className="bubble bubble--6"></div>
+        <div className="bubble bubble--7"></div>
+        <div className="bubble bubble--8"></div>
+        <div className="bubble bubble--9"></div>
+        <div className="bubble bubble--10"></div>
+        <div className="bubble bubble--11"></div>
+        <div className="bubble bubble--12"></div>
       </div>
       <svg className="waves" ref={waves} xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink"
         viewBox="0 24 150 28" preserveAspectRatio="none" shapeRendering="auto">
