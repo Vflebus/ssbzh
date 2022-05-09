@@ -120,7 +120,9 @@ function App() {
             }).map(participant => {
               return (
                 <div key={participant.id} className="top3">
-                  <img src={participant.img} alt="" />
+                  {participant.img && (
+                    <img src={participant.img} alt="" />
+                  )}
                   <p>{participant.nom}</p>
                 </div>
               )
