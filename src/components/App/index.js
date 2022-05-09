@@ -102,12 +102,12 @@ function App() {
         {/* <h2>Saison {tournament.season} <br />Semaine {tournament.week}</h2> */}
         <div className="tournamentSelector">
           <h2>Saison</h2>
-          <input type="number" min="0" className='h2Input' onFocus={e => e.target.value = ""} onChange={e => setSeason(e.target.value)} />
+          <input type="number" min="0" className='h2Input' onFocus={e => e.target.value = ""} onChange={e => setSeason(e.target.value)} placeholder="X"/>
           {/* <div className="cursor"></div> */}
         </div>
         <div className="tournamentSelector">
           <h2>Semaine</h2>
-          <input type="number" min="0" className='h2Input' onFocus={e => e.target.value = ""} onChange={e => setWeek(e.target.value)} />
+          <input type="number" min="0" className='h2Input' onFocus={e => e.target.value = ""} onChange={e => setWeek(e.target.value)} placeholder="X"/>
         </div>
         <button type="submit" className='diveButton diveIn' ref={diveInButton}>Dive in !</button>
       </form>
