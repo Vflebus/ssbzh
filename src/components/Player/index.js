@@ -12,7 +12,11 @@ const Player = ({ name, seed, finalRank, matchs }) => {
                 {matchs.map(match => {
                     return (
                         <div key={match.id} className="match">
-                            <img src={match.player1Img} className="playerImg" alt="" /> {match.divlayer1} {match.score} {match.player2} <img src={match.player2Img} className="playerImg" alt="" />
+                            <img src={match.player1Img} className="playerImg" alt="" /> 
+                            <p>{match.player1}</p>
+                            <p>{match.score}</p>
+                            <p>{match.player2}</p>
+                            <img src={match.player2Img} className="playerImg" alt="" />
                         </div>
                     )
                 })}
