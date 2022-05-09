@@ -18,65 +18,65 @@ function App() {
   const playerSelector = useRef();
 
   const [diving, setDiving] = useState(false);
-
-  useEffect(() => {
-    diveAnimation.current = gsap.timeline({ defaults: { duration: 1.5, ease: "power1.out" } });
-    if (diving) {
-      diveAnimation.current.to(diveInButton.current, {
-        opacity: 0
-      });
-      diveAnimation.current.to(sea.current, {
-        top: 0,
-      }, "<");
-      diveAnimation.current.to(waves.current, {
-        bottom: "100vh",
-      }, "<");
-      diveAnimation.current.to(tournamentName.current, {
-        y: "10vh",
-      }, "<");
-      diveAnimation.current.to(diveOutButton.current, {
-        opacity: 1
-      });
-      diveAnimation.current.to(playerSelector.current, {
-        opacity: 1
-      }, "<");
-    } else {
-      diveAnimation.current.to(sea.current, {
-        top: () => window.screen.width > 768 ? "90vh" : "80vh",
-      });
-      diveAnimation.current.to(waves.current, {
-        bottom: () => window.screen.width > 768 ? "10vh" : "20vh",
-      }, "<");
-      diveAnimation.current.to(diveOutButton.current, {
-        opacity: 0
-      }, "<");
-      diveAnimation.current.to(playerSelector.current, {
-        opacity: 0
-      }, "<");
-      diveAnimation.current.to(diveInButton.current, {
-        opacity: 1
-      });
-    }
-  });
-
-
-  const diveIn = () => {
-    setDiving(true);
-  };
-  const diveOut = () => {
-    setDiving(false);
-    setLoading(true);
-  }
-
-  const [tournament, setTournament] = useState([]);
+  const [tournament, setTournament] = useState();
   const [loading, setLoading] = useState(true);
   const [selectedPlayer, setSelectedPlayer] = useState(0);
   const [week, setWeek] = useState();
   const [season, setSeason] = useState();
   const [error, setError] = useState(false);
 
-  const loadTournament = async (e, season, week) => {
-    e.preventDefault();
+  useEffect(() => {
+    if (!loading) {
+      diveAnimation.current = gsap.timeline({ defaults: { duration: 1.5, ease: "power1.out" } });
+      if (diving) {
+        diveAnimation.current.to(diveInButton.current, {
+          opacity: 0
+        });
+        diveAnimation.current.to(sea.current, {
+          top: 0,
+        }, "<");
+        diveAnimation.current.to(waves.current, {
+          bottom: "100vh",
+        }, "<");
+        diveAnimation.current.to(tournamentName.current, {
+          y: "10vh",
+        }, "<");
+        diveAnimation.current.to(diveOutButton.current, {
+          opacity: 1
+        });
+        diveAnimation.current.to(playerSelector.current, {
+          opacity: 1
+        }, "<");
+      } else {
+        diveAnimation.current.to(sea.current, {
+          top: "90vh",
+        });
+        diveAnimation.current.to(waves.current, {
+          bottom: "10vh",
+        }, "<");
+        diveAnimation.current.to(diveOutButton.current, {
+          opacity: 0
+        }, "<");
+        diveAnimation.current.to(playerSelector.current, {
+          opacity: 0
+        }, "<");
+        diveAnimation.current.to(diveInButton.current, {
+          opacity: 1
+        });
+        setLoading(true);
+      }
+    }
+  }, [loading, diving]);
+
+  const diveIn = () => {
+    setDiving(true);
+  };
+  const diveOut = () => {
+    setDiving(false);
+  }
+
+
+  const loadTournament = async (season, week) => {
     console.log('diving !');
     const url = `CPUS${season}W${week}`;
     const api = axios.create({
@@ -86,34 +86,59 @@ function App() {
       const { data } = await api.get(`/${url}`);
       console.log(data);
       setTournament(data);
+      console.log(data[2].classement_final);
       setLoading(false);
-      setDiving(true);
+      setError(false);
     } catch (error) {
       console.log(error);
       setError(true);
     }
   }
 
+  useEffect(() => {
+    if (season && week) {
+      loadTournament(season, week);
+    } else {
+      console.log(`no search`);
+    }
+  }, [season, week]);
 
 
   return (
     <div className="app">
-      <form className="tournamentName" ref={tournamentName} onSubmit={(e) => { loadTournament(e, season, week) }}>
-        {/* <h2>Saison {tournament.season} <br />Semaine {tournament.week}</h2> */}
+      <div className="tournamentName" ref={tournamentName} onSubmit={(e) => { loadTournament(season, week) }}>
         <div className="tournamentSelector">
           <h2>Saison</h2>
-          <input type="number" min="0" className='h2Input' onFocus={e => e.target.value = ""} onChange={e => setSeason(e.target.value)} placeholder="X"/>
-          {/* <div className="cursor"></div> */}
+          <input type="number" min="0" className='h2Input' value={season} onFocus={e => setSeason("")} onChange={e => setSeason(e.target.value)} placeholder="X" />
         </div>
         <div className="tournamentSelector">
           <h2>Semaine</h2>
-          <input type="number" min="0" className='h2Input' onFocus={e => e.target.value = ""} onChange={e => setWeek(e.target.value)} placeholder="X"/>
+          <input type="number" min="0" className='h2Input' value={week} onFocus={e => setWeek("")} onChange={e => setWeek(e.target.value)} placeholder="X" />
         </div>
-        <button type="submit" className='diveButton diveIn' ref={diveInButton}>Dive in !</button>
-      </form>
+      </div>
       {error && (
-        <p className="errorMessage">Désolé ! <br />Ce tournoi n'est pas accessible depuis ce site. Il a probablement été enregistré sur une URL différente du modèle utilisé depuis la saison 2.</p>
+        <p className="errorMessage">Désolé !<br />Ce tournoi n'est pas accessible depuis ce site. Il a probablement été enregistré sur une URL différente du modèle utilisé depuis la saison 2.</p>
       )}
+      {tournament && (
+        <>
+          <div className="top3Container">
+            <h3>Top 3</h3>
+            {tournament.filter(participant => Number(participant.classement_final) < 4).sort((a, b) => {
+              return a.classement_final - b.classement_final
+            }).map(participant => {
+              return (
+                <div key={participant.id} className="top3">
+                  <img src={participant.img} alt="" />
+                  <p>{participant.nom}</p>
+                </div>
+              )
+            })}
+            <p>{tournament.length} participants</p>
+          </div>
+          <button className='diveButton' onClick={diveIn}>Dive in !</button>
+        </>
+      )
+      }
       <div className="sea" ref={sea}>
         <div className="seaNav">
           <button className='diveButton' onClick={diveOut} ref={diveOutButton}>Dive out !</button>
@@ -121,11 +146,11 @@ function App() {
             (
               <>
                 {/* <input list="playerSelector" className="playerSelector" ref={playerSelector} value={selectorValue} onChange={e => setSelectorValue(e.target.value)}/> */}
-                <select id='playerSelector' className="playerSelector" ref={playerSelector} onChange={e => setSelectedPlayer(e.target.value)}>
+                <select id='playerSelector' className="playerSelector" ref={playerSelector} value={selectedPlayer} onChange={e => setSelectedPlayer(e.target.value)}>
                   {
-                    tournament.participants.map(participant => {
+                    tournament.map(participant => {
                       return (
-                        <option value={tournament.participants.indexOf(participant)} key={tournament.participants.indexOf(participant)}>{participant.nom}</option>
+                        <option value={tournament.indexOf(participant)} key={tournament.indexOf(participant)}>{participant.nom}</option>
                       )
                     })
                   }
@@ -148,7 +173,7 @@ function App() {
           <div className="bubble bubble--12"></div>
         </div>
         {!loading && (
-          <Player name={tournament.participants[selectedPlayer].nom} seed={tournament.participants[selectedPlayer].seed} matchs={tournament.participants[selectedPlayer].matchs} finalRank={tournament.participants[selectedPlayer].classement_final} />
+          <Player name={tournament[selectedPlayer].nom} seed={tournament[selectedPlayer].seed} matchs={tournament[selectedPlayer].matchs} finalRank={tournament[selectedPlayer].classement_final} />
         )}
       </div>
       <svg className="waves" ref={waves} xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink"
