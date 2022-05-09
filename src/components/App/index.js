@@ -19,54 +19,47 @@ function App() {
 
   const [diving, setDiving] = useState(false);
   const [tournament, setTournament] = useState();
-  const [loading, setLoading] = useState(true);
   const [selectedPlayer, setSelectedPlayer] = useState(0);
   const [week, setWeek] = useState();
   const [season, setSeason] = useState();
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    if (!loading) {
-      diveAnimation.current = gsap.timeline({ defaults: { duration: 1.5, ease: "power1.out" } });
-      if (diving) {
-        diveAnimation.current.to(diveInButton.current, {
-          opacity: 0
-        });
-        diveAnimation.current.to(sea.current, {
-          top: 0,
-        }, "<");
-        diveAnimation.current.to(waves.current, {
-          bottom: "100vh",
-        }, "<");
-        diveAnimation.current.to(tournamentName.current, {
-          y: "10vh",
-        }, "<");
-        diveAnimation.current.to(diveOutButton.current, {
-          opacity: 1
-        });
-        diveAnimation.current.to(playerSelector.current, {
-          opacity: 1
-        }, "<");
-      } else {
-        diveAnimation.current.to(sea.current, {
-          top: "90vh",
-        });
-        diveAnimation.current.to(waves.current, {
-          bottom: "10vh",
-        }, "<");
-        diveAnimation.current.to(diveOutButton.current, {
-          opacity: 0
-        }, "<");
-        diveAnimation.current.to(playerSelector.current, {
-          opacity: 0
-        }, "<");
-        diveAnimation.current.to(diveInButton.current, {
-          opacity: 1
-        });
-        setLoading(true);
-      }
+    diveAnimation.current = gsap.timeline({ defaults: { duration: 1.5, ease: "power1.out" } });
+    if (diving) {
+      diveAnimation.current.to(diveInButton.current, {
+        opacity: 0
+      });
+      diveAnimation.current.to(sea.current, {
+        top: 0,
+      }, "<");
+      diveAnimation.current.to(waves.current, {
+        bottom: "100vh",
+      }, "<");
+      diveAnimation.current.to(diveOutButton.current, {
+        opacity: 1
+      });
+      diveAnimation.current.to(playerSelector.current, {
+        opacity: 1
+      }, "<");
+    } else {
+      diveAnimation.current.to(sea.current, {
+        top: "90vh",
+      });
+      diveAnimation.current.to(waves.current, {
+        bottom: "10vh",
+      }, "<");
+      diveAnimation.current.to(diveOutButton.current, {
+        opacity: 0
+      }, "<");
+      diveAnimation.current.to(playerSelector.current, {
+        opacity: 0
+      }, "<");
+      diveAnimation.current.to(diveInButton.current, {
+        opacity: 1
+      });
     }
-  }, [loading, diving]);
+  });
 
   const diveIn = () => {
     setDiving(true);
@@ -83,11 +76,10 @@ function App() {
       baseURL: 'https://challonge-fetch.herokuapp.com/'
     });
     try {
+      console.log('loading...')
       const { data } = await api.get(`/${url}`);
       console.log(data);
-      setTournament(data);
-      console.log(data[2].classement_final);
-      setLoading(false);
+      await setTournament(data);
       setError(false);
     } catch (error) {
       console.log(error);
@@ -142,7 +134,7 @@ function App() {
       <div className="sea" ref={sea}>
         <div className="seaNav">
           <button className='diveButton' onClick={diveOut} ref={diveOutButton}>Dive out !</button>
-          {!loading && !error &&
+          {tournament && !error &&
             (
               <>
                 {/* <input list="playerSelector" className="playerSelector" ref={playerSelector} value={selectorValue} onChange={e => setSelectorValue(e.target.value)}/> */}
@@ -172,7 +164,7 @@ function App() {
           <div className="bubble bubble--11"></div>
           <div className="bubble bubble--12"></div>
         </div>
-        {!loading && (
+        {tournament && (
           <Player name={tournament[selectedPlayer].nom} seed={tournament[selectedPlayer].seed} matchs={tournament[selectedPlayer].matchs} finalRank={tournament[selectedPlayer].classement_final} />
         )}
       </div>

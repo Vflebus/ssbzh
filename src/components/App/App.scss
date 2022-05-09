@@ -91,6 +91,7 @@
     /*Fix for safari gap*/
     min-height: 100px;
     max-height: 150px;
+    pointer-events: none;
 
     .parallax {
       use {
