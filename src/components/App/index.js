@@ -124,22 +124,16 @@ function App() {
             {tournament.filter(participant => Number(participant.classement_final) < 4).sort((a, b) => {
               return a.classement_final - b.classement_final
             }).map(participant => {
-              if (participant.img) {
-                return (
-                  <div key={participant.id} className="top3">
+              return (
+                <div key={participant.id} className={participant.img ? "top3" : "top3 noImg"}>
+                  {participant.img && (
                     <img src={participant.img} alt="" />
-                    <p>{participant.nom}</p>
-                  </div>
-                )
-              } else if (!participant.img) {
-                return (
-                  <div key={participant.id} className="top3 noImg">
-                    <img src={participant.img} alt="" />
-                    <p>{participant.nom}</p>
-                  </div>
-                )
-              }
-            })}
+                  )}
+                  <p>{participant.nom}</p>
+                </div>
+              )
+            }
+            )}
             <p>{tournament.length} participants</p>
           </div>
           <button className='diveButton' onClick={diveIn}>Dive in !</button>
