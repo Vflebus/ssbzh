@@ -65,6 +65,7 @@ function App() {
   };
   const diveOut = () => {
     setDiving(false);
+    setLoading(true);
   }
 
   const [tournament, setTournament] = useState([]);
@@ -72,6 +73,7 @@ function App() {
   const [selectedPlayer, setSelectedPlayer] = useState(0);
   const [week, setWeek] = useState();
   const [season, setSeason] = useState();
+  const [error, setError] = useState(false);
 
   const loadTournament = async (e, season, week) => {
     e.preventDefault();
@@ -80,34 +82,42 @@ function App() {
     const api = axios.create({
       baseURL: 'https://challonge-fetch.herokuapp.com/'
     });
-    const { data } = await api.get(`/${url}`);
-    console.log(data);
-    setTournament(data);
-    setLoading(false);
-    setDiving(true);
+    try {
+      const { data } = await api.get(`/${url}`);
+      console.log(data);
+      setTournament(data);
+      setLoading(false);
+      setDiving(true);
+    } catch (error) {
+      console.log(error);
+      setError(true);
+    }
   }
 
 
 
   return (
     <div className="app">
-      <form className="tournamentName"  ref={tournamentName} onSubmit={(e) => { loadTournament(e, season, week) }}>
+      <form className="tournamentName" ref={tournamentName} onSubmit={(e) => { loadTournament(e, season, week) }}>
         {/* <h2>Saison {tournament.season} <br />Semaine {tournament.week}</h2> */}
         <div className="tournamentSelector">
           <h2>Saison</h2>
-          <input type="number" min="0" className='h2Input' onFocus={e => e.target.value=""} onChange={e => setSeason(e.target.value)}/>
+          <input type="number" min="0" className='h2Input' onFocus={e => e.target.value = ""} onChange={e => setSeason(e.target.value)} />
           {/* <div className="cursor"></div> */}
         </div>
         <div className="tournamentSelector">
           <h2>Semaine</h2>
-          <input type="number" min="0" className='h2Input' onFocus={e => e.target.value=""} onChange={e => setWeek(e.target.value)}/>
+          <input type="number" min="0" className='h2Input' onFocus={e => e.target.value = ""} onChange={e => setWeek(e.target.value)} />
         </div>
-      <button type="submit" className='diveButton diveIn' ref={diveInButton}>Dive in !</button>
+        <button type="submit" className='diveButton diveIn' ref={diveInButton}>Dive in !</button>
       </form>
+      {error && (
+        <p className="errorMessage">Désolé ! <br />Ce tournoi n'est pas accessible depuis ce site. Il a probablement été enregistré sur une URL différente du modèle utilisé depuis la saison 2.</p>
+      )}
       <div className="sea" ref={sea}>
         <div className="seaNav">
           <button className='diveButton' onClick={diveOut} ref={diveOutButton}>Dive out !</button>
-          {!loading &&
+          {!loading && !error &&
             (
               <>
                 {/* <input list="playerSelector" className="playerSelector" ref={playerSelector} value={selectorValue} onChange={e => setSelectorValue(e.target.value)}/> */}
