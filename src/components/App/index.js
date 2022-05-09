@@ -79,11 +79,17 @@ function App() {
       console.log('loading...')
       const { data } = await api.get(`/${url}`);
       console.log(data);
+      if (data.length == 0) {
+        setError(true);
+        setTournament("");
+        return;
+      }
       await setTournament(data);
       setError(false);
     } catch (error) {
       console.log(error);
       setError(true);
+      setTournament("");
     }
   }
 
@@ -101,31 +107,38 @@ function App() {
       <div className="tournamentName" ref={tournamentName} onSubmit={(e) => { loadTournament(season, week) }}>
         <div className="tournamentSelector">
           <h2>Saison</h2>
-          <input type="number" min="0" className='h2Input' value={season} onFocus={e => setSeason("")} onChange={e => setSeason(e.target.value)} placeholder="X" />
+          <input type="number" min="1" className='h2Input' value={season} onFocus={e => setSeason("")} onChange={e => setSeason(e.target.value)} placeholder="X" />
         </div>
         <div className="tournamentSelector">
           <h2>Semaine</h2>
-          <input type="number" min="0" className='h2Input' value={week} onFocus={e => setWeek("")} onChange={e => setWeek(e.target.value)} placeholder="X" />
+          <input type="number" min="1" className='h2Input' value={week} onFocus={e => setWeek("")} onChange={e => setWeek(e.target.value)} placeholder="X" />
         </div>
       </div>
       {error && (
-        <p className="errorMessage">Désolé !<br />Ce tournoi n'est pas accessible depuis ce site. Il a probablement été enregistré sur une URL différente du modèle utilisé depuis la saison 2.</p>
+        <p className="errorMessage">Désolé !<br />Ce tournoi n'est pas accessible depuis ce site. Il a été mal renseigné sur Challonge, ou bien a été enregistré sur une URL inconnue.</p>
       )}
-      {tournament && (
+      {tournament && tournament.length > 0 && (
         <>
           <div className="top3Container">
             <h3>Top 3</h3>
             {tournament.filter(participant => Number(participant.classement_final) < 4).sort((a, b) => {
               return a.classement_final - b.classement_final
             }).map(participant => {
-              return (
-                <div key={participant.id} className="top3">
-                  {participant.img && (
+              if (participant.img) {
+                return (
+                  <div key={participant.id} className="top3">
                     <img src={participant.img} alt="" />
-                  )}
-                  <p>{participant.nom}</p>
-                </div>
-              )
+                    <p>{participant.nom}</p>
+                  </div>
+                )
+              } else if (!participant.img) {
+                return (
+                  <div key={participant.id} className="top3 noImg">
+                    <img src={participant.img} alt="" />
+                    <p>{participant.nom}</p>
+                  </div>
+                )
+              }
             })}
             <p>{tournament.length} participants</p>
           </div>
@@ -136,7 +149,7 @@ function App() {
       <div className="sea" ref={sea}>
         <div className="seaNav">
           <button className='diveButton' onClick={diveOut} ref={diveOutButton}>Dive out !</button>
-          {tournament && !error &&
+          {tournament && tournament.length > 0 && !error &&
             (
               <>
                 {/* <input list="playerSelector" className="playerSelector" ref={playerSelector} value={selectorValue} onChange={e => setSelectorValue(e.target.value)}/> */}
@@ -166,7 +179,7 @@ function App() {
           <div className="bubble bubble--11"></div>
           <div className="bubble bubble--12"></div>
         </div>
-        {tournament && (
+        {tournament && tournament.length > 0 && (
           <Player name={tournament[selectedPlayer].nom} seed={tournament[selectedPlayer].seed} matchs={tournament[selectedPlayer].matchs} finalRank={tournament[selectedPlayer].classement_final} />
         )}
       </div>
