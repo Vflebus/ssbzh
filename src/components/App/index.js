@@ -126,6 +126,7 @@ function App() {
             <h2>Semaine</h2>
             <input type="number" min="1" className='h2Input' value={week} onFocus={() => setWeek("")} onChange={e => setWeek(e.target.value)} placeholder="X" />
           </div>
+          <p className='date'>{tournament.date.day}-{tournament.date.month}-{tournament.date.year}</p>
         </div>
         {error && (
           <p className="errorMessage">Désolé !<br />Ce tournoi n'est pas accessible depuis ce site. Il a été mal renseigné sur Challonge, ou bien a été enregistré sur une URL inconnue.</p>
