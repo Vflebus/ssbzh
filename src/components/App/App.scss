@@ -104,7 +104,7 @@
     flex-direction: column;
     row-gap: 2vh;
     align-items: center;
-    margin-bottom: 10vh;
+    margin-bottom: 4vh;
 
     h3 {
       align-self: center;
@@ -359,6 +359,9 @@
         .h2Input {
           font-size: 4rem;
         }
+      }
+      .date {
+        font-size: 2rem;
       }
     }
     .logoBreizh {
