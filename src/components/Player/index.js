@@ -9,17 +9,23 @@ const Player = ({ name, seed, finalRank, matchs }) => {
                 <p>Placement: {finalRank}</p>
             </div>
             <div className="matchsList">
-                {matchs.map(match => {
-                    return (
-                        <div key={match.id} className="match">
-                            <img src={match.player1Img} className="playerImg" alt="" /> 
-                            <p>{match.player1}</p>
-                            <p>{match.score}</p>
-                            <p>{match.player2}</p>
-                            <img src={match.player2Img} className="playerImg" alt="" />
-                        </div>
-                    )
-                })}
+                <table className="results">
+                    {matchs.map(match => {
+                        return (
+                            <tr key={match.id} className={match.hasWon ? "match win" : "match lose"}>
+                                <td>
+                                    <p className="p1">{match.player1}</p>
+                                </td>
+                                <td className="score">
+                                    <p>{match.score}</p>
+                                </td>
+                                <td className="p2">
+                                    <p>{match.player2}</p>
+                                </td>
+                            </tr>
+                        )
+                    })}
+                </table>
             </div>
         </div>
     )
