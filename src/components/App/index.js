@@ -141,10 +141,8 @@ function App() {
                 return a.classement_final - b.classement_final
               }).map(participant => {
                 return (
-                  <div key={participant.id} className={participant.img ? "top3" : "top3 noImg"}>
-                    {participant.img && (
-                      <img src={participant.img} alt="" />
-                    )}
+                  <div key={participant.id} className="top3">
+                      <img src={participant.img ? participant.img : logo} alt="" />
                     <p>{participant.nom}</p>
                   </div>
                 )
