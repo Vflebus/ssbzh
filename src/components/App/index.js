@@ -150,7 +150,7 @@ function App() {
           </>
         )
         }
-        {!tournament && season && week && (
+        {!tournament && season && week && !error && (
           <p className="loadingText">Loading...</p>
         )}
         <img src={logo} className="logoBreizh" alt="" />
