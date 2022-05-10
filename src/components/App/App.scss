@@ -9,10 +9,38 @@
   position: relative;
   background: linear-gradient(60deg, #FD5E53, #FC9C54 40%, #FD5E53);
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
+
+  .surface {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+  }
+
+  .loadingText {
+    font-family: vars.$title-font;
+    font-size: 4rem;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    animation: blinking 2.5s infinite linear;
+  }
+
+  @keyframes blinking {
+    0% {
+      opacity: 100%;
+    }
+    50% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 100%;
+    }
+  }
 
   .diveButton {
     min-width: 10vw;
@@ -47,11 +75,15 @@
         font-family: vars.$title-font;
         text-align: center;
         background-color: transparent;
+        vertical-align: middle;
+        line-height: 1.3;
         border: 0;
 
         &::placeholder {
           text-decoration: underline;
           text-decoration-thickness: .2rem;
+          vertical-align: middle;
+          line-height: 1.3;
         }
       }
     }

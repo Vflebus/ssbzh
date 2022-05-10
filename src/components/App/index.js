@@ -18,6 +18,7 @@ function App() {
   const diveOutButton = useRef();
   const tournamentName = useRef();
   const playerSelector = useRef();
+  const surface = useRef();
 
   const [diving, setDiving] = useState(false);
   const [tournament, setTournament] = useState();
@@ -38,6 +39,9 @@ function App() {
       diveAnimation.current.to(waves.current, {
         bottom: "100vh",
       }, "<");
+      diveAnimation.current.to(surface.current, {
+        transform: "translateY(-40vh)"
+      }, "<");
       diveAnimation.current.to(diveOutButton.current, {
         opacity: 1
       });
@@ -50,6 +54,9 @@ function App() {
       });
       diveAnimation.current.to(waves.current, {
         bottom: "10vh",
+      }, "<");
+      diveAnimation.current.to(surface.current, {
+        transform: "translateY(0)"
       }, "<");
       diveAnimation.current.to(diveOutButton.current, {
         opacity: 0
@@ -106,49 +113,51 @@ function App() {
 
   return (
     <div className="app">
-      <div className="tournamentName" ref={tournamentName} onSubmit={(e) => { loadTournament(season, week) }}>
-        <div className="tournamentSelector">
-          <h2>Saison</h2>
-          <input type="number" min="1" className='h2Input' value={season} onFocus={e => setSeason("")} onChange={e => setSeason(e.target.value)} placeholder="X" />
-        </div>
-        <div className="tournamentSelector">
-          <h2>Semaine</h2>
-          <input type="number" min="1" className='h2Input' value={week} onFocus={e => setWeek("")} onChange={e => setWeek(e.target.value)} placeholder="X" />
-        </div>
-      </div>
-      {error && (
-        <p className="errorMessage">Désolé !<br />Ce tournoi n'est pas accessible depuis ce site. Il a été mal renseigné sur Challonge, ou bien a été enregistré sur une URL inconnue.</p>
-      )}
-      {tournament && tournament.length > 0 && (
-        <>
-          <div className="top3Container">
-            <h3>Top 3</h3>
-            {tournament.filter(participant => Number(participant.classement_final) < 4).sort((a, b) => {
-              return a.classement_final - b.classement_final
-            }).map(participant => {
-              return (
-                <div key={participant.id} className={participant.img ? "top3" : "top3 noImg"}>
-                  {participant.img && (
-                    <img src={participant.img} alt="" />
-                  )}
-                  <p>{participant.nom}</p>
-                </div>
-              )
-            }
-            )}
-            <p>{tournament.length} participants</p>
+      <div className="surface" ref={surface}>
+        <div className="tournamentName" ref={tournamentName} onSubmit={(e) => { loadTournament(season, week) }}>
+          <div className="tournamentSelector">
+            <h2>Saison</h2>
+            <input type="number" min="1" className='h2Input' value={season} onFocus={e => setSeason("")} onChange={e => setSeason(e.target.value)} placeholder="X" />
           </div>
-          <button className='diveButton' onClick={diveIn}>Dive in !</button>
-        </>
-      )
-      }
-      {!tournament && season && week && (
+          <div className="tournamentSelector">
+            <h2>Semaine</h2>
+            <input type="number" min="1" className='h2Input' value={week} onFocus={e => setWeek("")} onChange={e => setWeek(e.target.value)} placeholder="X" />
+          </div>
+        </div>
+        {error && (
+          <p className="errorMessage">Désolé !<br />Ce tournoi n'est pas accessible depuis ce site. Il a été mal renseigné sur Challonge, ou bien a été enregistré sur une URL inconnue.</p>
+        )}
+        {tournament && tournament.length > 0 && (
+          <>
+            <div className="top3Container">
+              <h3>Top 3</h3>
+              {tournament.filter(participant => Number(participant.classement_final) < 4).sort((a, b) => {
+                return a.classement_final - b.classement_final
+              }).map(participant => {
+                return (
+                  <div key={participant.id} className={participant.img ? "top3" : "top3 noImg"}>
+                    {participant.img && (
+                      <img src={participant.img} alt="" />
+                    )}
+                    <p>{participant.nom}</p>
+                  </div>
+                )
+              }
+              )}
+              <p>{tournament.length} participants</p>
+            </div>
+            <button className='diveButton' onClick={diveIn}>Voir le tournoi</button>
+          </>
+        )
+        }
+        {!tournament && season && week && (
+          <p className="loadingText">Loading...</p>
+        )}
         <img src={logo} className="logoBreizh" alt="" />
-      )}
-      <img src={logo} className="logoBreizh" alt="" />
+      </div>
       <div className="sea" ref={sea}>
         <div className="seaNav">
-          <button className='diveButton' onClick={diveOut} ref={diveOutButton}>Dive out !</button>
+          <button className='diveButton' onClick={diveOut} ref={diveOutButton}>Retour aux tournois</button>
           {tournament && tournament.length > 0 && !error &&
             (
               <>
