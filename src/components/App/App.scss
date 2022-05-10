@@ -311,12 +311,19 @@
 
   /*Shrinking for mobile*/
   @media (max-width: 768px) {
+    .tournamentName {
+      .tournamentSelector {
+        font-size: 4rem;
+        .h2Input {
+          font-size: 4rem;
+        }
+      }
+    }
     .waves {
       height: 40px;
       min-height: 40px;
       bottom: 20vh;
     }
-
     .sea {
       top: 80vh;
     }
