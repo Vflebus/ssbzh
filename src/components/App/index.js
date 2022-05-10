@@ -4,6 +4,8 @@ import './App.scss';
 import { gsap } from 'gsap';
 import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
+import logo from '../../images/logo_ssbzh.png'
+import logo_transparent from '../../images/logo_breizh.png'
 
 import Player from '../Player';
 
@@ -140,6 +142,10 @@ function App() {
         </>
       )
       }
+      {!tournament && season && week && (
+        <img src={logo} className="logoBreizh" alt="" />
+      )}
+      <img src={logo} className="logoBreizh" alt="" />
       <div className="sea" ref={sea}>
         <div className="seaNav">
           <button className='diveButton' onClick={diveOut} ref={diveOutButton}>Dive out !</button>
@@ -186,7 +192,7 @@ function App() {
           <use xlinkHref="#gentle-wave" x="48" y="0" fill="rgba(31, 64, 73, 0.7" />
           <use xlinkHref="#gentle-wave" x="48" y="3" fill="rgba(31, 64, 73, 0.5)" />
           <use xlinkHref="#gentle-wave" x="48" y="5" fill="rgba(31, 64, 73, 0.3)" />
-          <use xlinkHref="#gentle-wave" x="48" y="7" fill="#50a4b9" />
+          <use xlinkHref="#gentle-wave" x="48" y="9" fill="#50a4b9" />
         </g>
       </svg>
     </div>
