@@ -28,45 +28,48 @@ function App() {
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    diveAnimation.current = gsap.timeline({ defaults: { duration: 1.5, ease: "power1.out" } });
-    if (diving) {
-      diveAnimation.current.to(diveInButton.current, {
-        opacity: 0
-      });
-      diveAnimation.current.to(sea.current, {
-        top: 0,
-      }, "<");
-      diveAnimation.current.to(waves.current, {
-        bottom: "100vh",
-      }, "<");
-      diveAnimation.current.to(surface.current, {
-        transform: "translateY(-40vh)"
-      }, "<");
-      diveAnimation.current.to(diveOutButton.current, {
-        opacity: 1
-      });
-      diveAnimation.current.to(playerSelector.current, {
-        opacity: 1
-      }, "<");
-    } else {
-      diveAnimation.current.to(sea.current, {
-        top: "90vh",
-      });
-      diveAnimation.current.to(waves.current, {
-        bottom: "10vh",
-      }, "<");
-      diveAnimation.current.to(surface.current, {
-        transform: "translateY(0)"
-      }, "<");
-      diveAnimation.current.to(diveOutButton.current, {
-        opacity: 0
-      }, "<");
-      diveAnimation.current.to(playerSelector.current, {
-        opacity: 0
-      }, "<");
-      diveAnimation.current.to(diveInButton.current, {
-        opacity: 1
-      });
+    console.log(tournament);
+    if(tournament){
+      diveAnimation.current = gsap.timeline({ defaults: { duration: 1.5, ease: "power1.out" } });
+      if (diving) {
+        diveAnimation.current.to(diveInButton.current, {
+          opacity: 0
+        });
+        diveAnimation.current.to(sea.current, {
+          top: 0,
+        }, "<");
+        diveAnimation.current.to(waves.current, {
+          bottom: "100vh",
+        }, "<");
+        diveAnimation.current.to(surface.current, {
+          transform: "translateY(-40vh)"
+        }, "<");
+        diveAnimation.current.to(diveOutButton.current, {
+          opacity: 1
+        });
+        diveAnimation.current.to(playerSelector.current, {
+          opacity: 1
+        }, "<");
+      } else {
+        diveAnimation.current.to(sea.current, {
+          top: "90vh",
+        });
+        diveAnimation.current.to(waves.current, {
+          bottom: "10vh",
+        }, "<");
+        diveAnimation.current.to(surface.current, {
+          transform: "translateY(0)"
+        }, "<");
+        diveAnimation.current.to(diveOutButton.current, {
+          opacity: 0
+        }, "<");
+        diveAnimation.current.to(playerSelector.current, {
+          opacity: 0
+        }, "<");
+        diveAnimation.current.to(diveInButton.current, {
+          opacity: 1
+        });
+      }
     }
   });
 
@@ -117,11 +120,11 @@ function App() {
         <div className="tournamentName" ref={tournamentName} onSubmit={(e) => { loadTournament(season, week) }}>
           <div className="tournamentSelector">
             <h2>Saison</h2>
-            <input type="number" min="1" className='h2Input' value={season} onFocus={e => setSeason("")} onChange={e => setSeason(e.target.value)} placeholder="X" />
+            <input type="number" min="1" className='h2Input' value={season} onFocus={() => setSeason("")} onChange={e => setSeason(e.target.value)} placeholder="X" />
           </div>
           <div className="tournamentSelector">
             <h2>Semaine</h2>
-            <input type="number" min="1" className='h2Input' value={week} onFocus={e => setWeek("")} onChange={e => setWeek(e.target.value)} placeholder="X" />
+            <input type="number" min="1" className='h2Input' value={week} onFocus={() => setWeek("")} onChange={e => setWeek(e.target.value)} placeholder="X" />
           </div>
         </div>
         {error && (
@@ -161,10 +164,10 @@ function App() {
           <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
         </defs>
         <g className="parallax">
-          <use xlinkHref="#gentle-wave" x="48" y="0" fill="rgba(31, 64, 73, 0.7" stroke="rgba(255, 255, 255, 0.7" stroke-width=".4" />
-          <use xlinkHref="#gentle-wave" x="48" y="3" fill="rgba(31, 64, 73, 0.5)" stroke="rgba(255, 255, 255, 0.5" stroke-width=".4" />
-          <use xlinkHref="#gentle-wave" x="48" y="5" fill="rgba(31, 64, 73, 0.3)" stroke="rgba(255, 255, 255, 0.3" stroke-width=".4" />
-          <use xlinkHref="#gentle-wave" x="48" y="9" fill="#50a4b9" stroke='white' stroke-width=".4" />
+          <use xlinkHref="#gentle-wave" x="48" y="0" fill="rgba(31, 64, 73, 0.7" stroke="rgba(255, 255, 255, 0.7" strokeWidth=".4" />
+          <use xlinkHref="#gentle-wave" x="48" y="3" fill="rgba(31, 64, 73, 0.5)" stroke="rgba(255, 255, 255, 0.5" strokeWidth=".4" />
+          <use xlinkHref="#gentle-wave" x="48" y="5" fill="rgba(31, 64, 73, 0.3)" stroke="rgba(255, 255, 255, 0.3" strokeWidth=".4" />
+          <use xlinkHref="#gentle-wave" x="48" y="9" fill="#50a4b9" stroke='white' strokeWidth=".4" />
         </g>
       </svg>
       <div className="sea" ref={sea}>
