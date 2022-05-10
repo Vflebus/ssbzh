@@ -130,11 +130,11 @@ function App() {
         {error && (
           <p className="errorMessage">Désolé !<br />Ce tournoi n'est pas accessible depuis ce site. Il a été mal renseigné sur Challonge, ou bien a été enregistré sur une URL inconnue.</p>
         )}
-        {tournament && tournament.length > 0 && (
+        {tournament && tournament.participants.length > 0 && (
           <>
             <div className="top3Container">
               <h3>Top 3</h3>
-              {tournament.filter(participant => Number(participant.classement_final) < 4).sort((a, b) => {
+              {tournament.participants.filter(participant => Number(participant.classement_final) < 4).sort((a, b) => {
                 return a.classement_final - b.classement_final
               }).map(participant => {
                 return (
@@ -147,7 +147,7 @@ function App() {
                 )
               }
               )}
-              <p>{tournament.length} participants</p>
+              <p>{tournament.participants.length} participants</p>
             </div>
             <button className='diveButton' onClick={diveIn}>Voir le tournoi</button>
           </>
@@ -173,15 +173,15 @@ function App() {
       <div className="sea" ref={sea}>
         <div className="seaNav">
           <button className='diveButton' onClick={diveOut} ref={diveOutButton}>Retour aux tournois</button>
-          {tournament && tournament.length > 0 && !error &&
+          {tournament && tournament.participants.length > 0 && !error &&
             (
               <>
                 {/* <input list="playerSelector" className="playerSelector" ref={playerSelector} value={selectorValue} onChange={e => setSelectorValue(e.target.value)}/> */}
                 <select id='playerSelector' className="playerSelector" ref={playerSelector} value={selectedPlayer} onChange={e => setSelectedPlayer(e.target.value)}>
                   {
-                    tournament.map(participant => {
+                    tournament.participants.map(participant => {
                       return (
-                        <option value={tournament.indexOf(participant)} key={tournament.indexOf(participant)}>{participant.nom}</option>
+                        <option value={tournament.participants.indexOf(participant)} key={tournament.participants.indexOf(participant)}>{participant.nom}</option>
                       )
                     })
                   }
@@ -203,8 +203,8 @@ function App() {
           <div className="bubble bubble--11"></div>
           <div className="bubble bubble--12"></div>
         </div>
-        {tournament && tournament.length > 0 && (
-          <Player name={tournament[selectedPlayer].nom} seed={tournament[selectedPlayer].seed} matchs={tournament[selectedPlayer].matchs} finalRank={tournament[selectedPlayer].classement_final} />
+        {tournament && tournament.participants.length > 0 && (
+          <Player name={tournament.participants[selectedPlayer].nom} seed={tournament.participants[selectedPlayer].seed} matchs={tournament.participants[selectedPlayer].matchs} finalRank={tournament.participants[selectedPlayer].classement_final} />
         )}
       </div>
     </div>
