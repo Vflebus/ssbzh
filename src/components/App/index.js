@@ -52,10 +52,10 @@ function App() {
         }, "<");
       } else {
         diveAnimation.current.to(sea.current, {
-          top: "90vh",
+          top: "100vh",
         });
         diveAnimation.current.to(waves.current, {
-          bottom: "10vh",
+          bottom: "0vh",
         }, "<");
         diveAnimation.current.to(surface.current, {
           transform: "translateY(0)"
