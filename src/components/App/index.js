@@ -51,12 +51,23 @@ function App() {
           opacity: 1
         }, "<");
       } else {
-        diveAnimation.current.to(sea.current, {
-          top: "100vh",
-        });
-        diveAnimation.current.to(waves.current, {
-          bottom: "0vh",
-        }, "<");
+        if(window.innerWidth < 768){
+          console.log("< 1250");
+          diveAnimation.current.to(sea.current, {
+            top: "90.9vh",
+          });
+          diveAnimation.current.to(waves.current, {
+            bottom: "10vh",
+          }, "<");
+        } else {
+          console.log("!< 1250");
+          diveAnimation.current.to(sea.current, {
+            top: "100vh",
+          });
+          diveAnimation.current.to(waves.current, {
+            bottom: "0vh",
+          }, "<");
+        }
         diveAnimation.current.to(surface.current, {
           transform: "translateY(0)"
         }, "<");
