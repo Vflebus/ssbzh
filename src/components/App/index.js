@@ -1,13 +1,16 @@
+'use client';
+
 /* eslint-disable eqeqeq */
 /* eslint-disable no-unused-vars */
 import './App.scss';
 import { gsap } from 'gsap';
 import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
-import logo from '../../images/logo_ssbzh.png'
-import logo_transparent from '../../images/logo_breizh.png'
+import logo from '../../../public/images/logo_ssbzh.png'
 
 import Player from '../Player';
+import { fetch_challonge } from '../../utils/requests';
+import Image from 'next/image';
 
 function App() {
 
@@ -51,7 +54,7 @@ function App() {
           opacity: 1
         }, "<");
       } else {
-        if(window.innerWidth < 768){
+        if (window.innerWidth < 768) {
           console.log("< 1250");
           diveAnimation.current.to(sea.current, {
             top: "90.9vh",
@@ -96,11 +99,13 @@ function App() {
     console.log('diving !');
     const url = `CPUS${season}W${week}`;
     const api = axios.create({
-      baseURL: 'https://challonge-fetch.herokuapp.com/'
+      baseURL: 'https://api.challonge.com/v1/'
     });
+    const data = await fetch_challonge(url);
+    console.log(data);
     try {
       console.log('loading...')
-      const { data } = await api.get(`/${url}`);
+      // const { data } = await api.get(`/${url}`);
       console.log(data);
       if (data.length == 0) {
         setError(true);
@@ -142,7 +147,7 @@ function App() {
           )}
         </div>
         {error && (
-          <p className="errorMessage">Désolé !<br />Ce tournoi n'est pas accessible depuis ce site. Il a été mal renseigné sur Challonge, ou bien a été enregistré sur une URL inconnue.</p>
+          <p className="errorMessage">Désolé !<br />Ce tournoi n&apos;est pas accessible depuis ce site. Il a été mal renseigné sur Challonge, ou bien a été enregistré sur une URL inconnue.</p>
         )}
         {tournament && tournament.participants.length > 0 && (
           <>
@@ -153,7 +158,7 @@ function App() {
               }).map(participant => {
                 return (
                   <div key={participant.id} className="top3">
-                      <img src={participant.img ? participant.img : logo} alt="" />
+                    <Image src={participant.img ? participant.img : logo} alt="" width={50} height={50} />
                     <p>{participant.nom}</p>
                   </div>
                 )
@@ -168,7 +173,7 @@ function App() {
         {!tournament && season && week && !error && (
           <p className="loadingText">Loading...</p>
         )}
-        <img src={logo} className="logoBreizh" alt="" />
+        <Image src={logo} className="logoBreizh" alt="" width={100} height={100} />
       </div>
       <svg className="waves" ref={waves} xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink"
         viewBox="0 24 150 28" preserveAspectRatio="none" shapeRendering="auto">
